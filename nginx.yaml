@@ -1,0 +1,24 @@
+- name: Nginx Playbook
+  hosts: webservers
+  tasks:
+  - name: Install EPEL Repository 
+    yum:
+      name: epel-release
+      state: present
+
+  - name: install nginx
+    yum:
+      name: nginx
+      state: present
+  - name: nging service restart 
+      name: nginx
+      state: restartd
+  - name: allow port to firewalld
+    firewalld:
+      port: 80/tcp
+      state: present
+      permanent: true
+  - name: restart firewall service 
+    service:
+      name: firewalld
+      state: restarted

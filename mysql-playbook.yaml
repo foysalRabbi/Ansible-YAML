@@ -1,0 +1,34 @@
+- name: Install mariadb server on Target
+  hosts: db01
+  tasks:
+    - name: Installing Maria DB Package
+      yum:
+        name: mariadb-server
+        state: present
+
+    - name: Starting DB Service
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Mysql Client Installing
+      yum:
+        name: mysql
+        state: present
+
+    - name: Installing Python mysqld Package
+      yum:
+        name: MySQL-python
+        state: present
+
+    - name: check root password is unset
+      mysql_user:
+        login_host: 'localhost'
+        login_user: 'root'
+        login_password: ''
+        name: 'root'
+        password: 'Admin123'
+        name: 'admin'
+        password: 'admin123'
+        state: present   

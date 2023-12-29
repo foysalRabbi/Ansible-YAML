@@ -1,0 +1,37 @@
+---
+- name: configure dns on centos 
+  hosts: web01
+  vars:
+   - dns_server: 10.200.201.100
+  tasks:
+   - name: add dns server to resolv.conf 
+     lineinfile:
+       path: /etc/resolv.conf
+       line: 'nameserver {{ dns_server }}'
+   - name: Selinux Enforcing
+     lineinfile:
+       path: /etc/selinux/config
+       regexp: '^SELINUX='
+       line: SELINUX=enforcing
+   - name: Update apache port from 80 to 8080
+     lineinfile:
+       path: /etc/httpd/conf/httpd.conf
+       regexp: '^Listen '
+       insertafter: '^Listen '
+       line: Listen 8080
+   - name: Create a Index.html file 
+     lineinfile:
+       path: /var/www/html/index.html
+       line: Welcome To Pagecloud Another Line from ansible
+       state: present
+       create: true
+   - name: Replace a line in a file
+     lineinfile:
+       path: /var/www/html/index.html
+       regexp: ^Welcome
+       line: Congratulation to have a new couser 
+   - name: Remove a line from a file
+     lineinfile:
+       path: /var/www/html/index.html
+       regexp: '^Welcome To Pagecloud'
+       state: absent

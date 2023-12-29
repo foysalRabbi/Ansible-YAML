@@ -1,0 +1,23 @@
+- name: Condtitional and veriable packages use case
+  hosts: webserver
+  become: true
+  tasks:
+  - name: Select OS if it is Redhat base
+    include_vars: centos-pac.yaml
+    when: ansible_os_family == 'RedHat'
+  - name: Select OS if it is Debian base
+    include_vars: debian-pac.yaml
+    when: ansible_os_family == 'Debian'
+  - debug:
+      msg: "{{ apache_package }}"
+  - name: Install apache package on Ubuntu
+    apt:
+     name: "{{ apache_package }}"
+     state: absent
+    when: ansible_os_family == 'Debian'
+  - name: Install apache package on Centos 7
+    yum:
+     name: "{{ apache_package }}"
+     state: absent
+    when: ansible_os_family == 'RedHat'
+

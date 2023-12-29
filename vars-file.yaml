@@ -1,0 +1,10 @@
+- name: user variable in file fromat
+  hosts: web01
+  tasks:
+  - include_vars: name_vars.yaml
+  - debug:
+      msg: "Information about {{ name }}"
+  - debug:
+      msg: " {{ name }} is {{ age }} years old."
+  - debug:
+      msg: " {{ name }} is {{ Sex }}"

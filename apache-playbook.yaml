@@ -1,0 +1,34 @@
+- name: Install Apache On Centos 7
+  hosts: web
+  tasks:
+    - name: Apache web installaion package started
+      yum:
+        name: httpd
+        state: latest
+    - name: copy file controller to target host
+      copy:
+        src: /root/pagecloud/code
+        dest: /var/www/html
+        owner: apache
+        group: root
+        mode: 0755
+    - name: Restart apache service
+      service:
+        name: httpd
+        state: restarted
+    - name: Apache service enabled
+      service:
+        name: httpd
+        enabled: yes
+    - name: Open firewall port for apache
+      firewalld:
+        port: 80/tcp
+        state: enabled
+    - name: start apache service again for ensure
+      service:
+        name: httpd
+        state: restarted
+    - name: restart firewalld service
+      service:
+        name: firewalld
+        state: restarted

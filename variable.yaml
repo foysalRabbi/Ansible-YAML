@@ -1,0 +1,41 @@
+- name: Using Variable in Playbook in Ansible
+  hosts: web03
+  gather_facts: no
+  vars:
+    ports: [80/tcp, 8080/tcp]
+    packages:
+      - vim
+      - wget
+      - nginx
+  tasks:
+  - name: install epel repository 
+    yum:
+      name: epel-release
+      state: present
+  - name: Print variable
+    debug:
+      msg: " We will install the packages on our system {{ packages }} and {{ ports }}"
+  - name: Print single variable
+    debug:
+      msg: "This is just print a single one {{ packages[2] }} and {{ ports[0] }}"
+  - name: install packages on system 
+    yum:
+      name: "{{ packages }}"
+      state: present
+  - name: Start Service nginx
+    service:
+      name: "{{ packages[2] }}"
+      state: restarted
+      enabled: yes
+  - name: Allow Port on Firewall
+    firewalld:
+      port: "{{ ports[0] }}"
+      permanent: true
+      state: enabled
+  - name: Reload Firewalld
+    service:
+      name: firewalld
+      state: reloaded
+  - name: Echo host name 
+    debug:
+      msg: "this playbook is running from {{ inventory_hostname }}"
